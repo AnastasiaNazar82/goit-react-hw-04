@@ -1,15 +1,18 @@
 import axios from "axios";
 
-axios.defaults.baseURL = "<https://hn.algolia.com/api/v1>";
+const API_KEY = "zl5ajlft1JNrwRwTaer6p9rRFP015oGnGRWIZxEASeA";
 
-export const getArticles = async (topic, totalPage) => {
-  const response = await axios.get("/search", {
+axios.defaults.baseURL = "https://api.unsplash.com";
+axios.defaults.headers.common["Authorization"] = API_KEY;
+
+export const getArticles = async (topic, page) => {
+  const response = await axios.get("/search/photos?query=${topic}", {
     params: {
       query: topic,
-      page: totalPage,
-      hitsPrePage: 20,
+      page: page,
+      pre_page: 12,
     },
   });
 
-  return response.data.hits;
+  return response.data;
 };
