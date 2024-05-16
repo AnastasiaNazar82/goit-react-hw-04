@@ -16,7 +16,7 @@ export default function SearchBart({ onSubmit }) {
             type="text"
             name="query"
             autoComplete="off"
-            autoFocus
+            autoFocus={true}
             placeholder="Search images and photos"
           />
           {/* {isError && <p>Please enter a search term.</p>} */}
