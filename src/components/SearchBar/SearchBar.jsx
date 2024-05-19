@@ -6,10 +6,13 @@ import css from "./SearchBar.module.css";
 export default function SearchBart({ onSubmit }) {
   const handleSubmit = (e) => {
     e.preventDefault();
-    const value = e.target.query.value.trim();
+    const value = e.target.search.value.trim();
 
     if (!value) {
-      return toast.error("This input can't be empty!");
+      return toast.error("This input can't be empty!", {
+        duration: 5000,
+        position: "top-right",
+      });
     }
     onSubmit(value);
   };
@@ -20,7 +23,7 @@ export default function SearchBart({ onSubmit }) {
         <input
           className={css.input}
           placeholder="Search images and photos"
-          name="topic"
+          name="search"
           autoFocus
         />
         <button className={css.button} type="submit">

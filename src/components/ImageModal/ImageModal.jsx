@@ -13,8 +13,8 @@ export default function ImageModal({ isOpen, imageUrl, onClose }) {
       shouldCloseOnEsc={true}
     >
       <img
-        src={imageUrl}
-        alt="Large version of the image"
+        src={imageUrl.urls.regular}
+        alt={imageUrl.description || "Large version of the image"}
         className={css.img}
       />
     </Modal>

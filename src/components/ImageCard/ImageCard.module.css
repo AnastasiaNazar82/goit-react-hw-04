@@ -3,6 +3,7 @@
   height: 300px;
   object-fit: cover;
   cursor: pointer;
+  transition: transform 250ms linear;
 }
 .imgContainer {
   display: flex;
