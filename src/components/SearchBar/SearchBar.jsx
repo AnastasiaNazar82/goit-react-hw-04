@@ -1,30 +1,32 @@
-import { Field, Form, Formik } from "formik";
-import { FiSearch } from "react-icons/fi";
+// import { Field, Form, Formik, ErrorMessage } from "formik";
+import { IoIosSearch } from "react-icons/io";
+import toast from "react-hot-toast";
+import css from "./SearchBar.module.css";
 
 export default function SearchBart({ onSubmit }) {
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const value = e.target.query.value.trim();
+
+    if (!value) {
+      return toast.error("This input can't be empty!");
+    }
+    onSubmit(value);
+  };
+
   return (
-    <header>
-      <Formik
-        initialValues={{ query: "" }}
-        handleSubmit={(values, actions) => {
-          onSubmit(values.query);
-          actions.resetForm();
-        }}
-      >
-        <Form>
-          <Field
-            type="text"
-            name="query"
-            autoComplete="off"
-            autoFocus={true}
-            placeholder="Search images and photos"
-          />
-          {/* {isError && <p>Please enter a search term.</p>} */}
-          <button type="submit">
-            <FiSearch size="16px" />
-          </button>
-        </Form>
-      </Formik>
+    <header className={css.header}>
+      <form className={css.form} onSubmit={handleSubmit}>
+        <input
+          className={css.input}
+          placeholder="Search images and photos"
+          name="topic"
+          autoFocus
+        />
+        <button className={css.button} type="submit">
+          <IoIosSearch />
+        </button>
+      </form>
     </header>
   );
 }

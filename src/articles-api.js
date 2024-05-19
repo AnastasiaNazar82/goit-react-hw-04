@@ -6,7 +6,7 @@ axios.defaults.baseURL = "https://api.unsplash.com";
 axios.defaults.headers.common["Authorization"] = API_KEY;
 
 export const getArticles = async (topic, page) => {
-  const response = await axios.get("/search/photos?query=${topic}", {
+  const response = await axios.get("/search/photos", {
     params: {
       query: topic,
       page: page,
