@@ -19,7 +19,7 @@ export default function App() {
   const [imageUrl, setImageUrl] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
   const [error, setError] = useState(false);
-  const [totalImages, setTotalImages] = useState(0);
+  const [totalImages, setTotalImages] = useState(1);
 
   useEffect(() => {
     if (query === "") return;
@@ -28,9 +28,10 @@ export default function App() {
       try {
         setError(false);
         setIsLoading(true);
-        const data = await getImages(query, page);
-        setImages((prevState) => [...prevState, ...data.results]);
-        setTotalImages(data.total_results);
+        const { results, total_pages } = await getImages(query, page);
+
+        setImages((prevState) => [...prevState, ...results]);
+        setTotalImages(total_pages);
       } catch (error) {
         toast.error(error.message);
       } finally {
@@ -44,7 +45,7 @@ export default function App() {
     setQuery(query);
     setImages([]);
     setPage(1);
-    setTotalImages(0);
+    setTotalImages(1);
   };
 
   const loadMoreImg = () => {
@@ -68,7 +69,10 @@ export default function App() {
       {images.length > 0 && (
         <ImageGallery images={images} openModal={openModal} />
       )}
-      {images.length < totalImages && !isLoading && (
+      {page === totalImages && images.length > 0 && (
+        <p>Sorry, no more images available</p>
+      )}
+      {page < totalImages && !isLoading && images.length > 0 && (
         <LoadMoreBtn onClick={loadMoreImg} />
       )}
       {isOpen && imageUrl && (
