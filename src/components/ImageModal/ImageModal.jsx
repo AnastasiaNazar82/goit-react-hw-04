@@ -11,12 +11,10 @@ export default function ImageModal({ isOpen, imageUrl, onClose }) {
       overlayClassName={css.overlay}
       shouldCloseOnOverlayClick={true}
       shouldCloseOnEsc={true}
+      preventScroll={true}
+      bodyOpenClassName={css.modalOpen}
     >
-      <img
-        src={imageUrl.urls.regular}
-        alt={imageUrl.description || "Large version of the image"}
-        className={css.img}
-      />
+      <img src={imageUrl.url} alt={imageUrl.alt} className={css.img} />
     </Modal>
   );
 }

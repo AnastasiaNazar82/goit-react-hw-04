@@ -1,13 +1,11 @@
 .list {
   display: flex;
   flex-wrap: wrap;
-  gap: 15px;
-  padding: 15px;
+  gap: 32px;
+  margin-bottom: 32px;
   list-style: none;
 }
 
 .listItem {
-  flex: 1 0 calc(25% - 15px);
-  max-width: calc(25% - 15px);
-  box-sizing: border-box;
+  width: 400px;
 }

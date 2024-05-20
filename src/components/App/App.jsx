@@ -1,12 +1,13 @@
-// import axios from "axios";
-import SearchBar from "../SearchBar/SearchBar";
-import LoadMoreBtn from "../LoadMoreBtn/LoadMoreBtn";
-import ImageModal from "../ImageModal/ImageModal";
 import { Toaster } from "react-hot-toast";
-import { useEffect, useState } from "react";
-import ImageGallery from "../ImageGallery/ImageGallery";
+import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
-import { getArticles } from "../../articles-api";
+
+import { getImages } from "../../articles-api";
+
+import SearchBar from "../SearchBar/SearchBar";
+import ImageGallery from "../ImageGallery/ImageGallery";
+import ImageModal from "../ImageModal/ImageModal";
+import LoadMoreBtn from "../LoadMoreBtn/LoadMoreBtn";
 import Loader from "../Loader/Loader";
 import ErrorMessag from "../ErrorMessage/ErrorMessage";
 
@@ -15,23 +16,21 @@ export default function App() {
   const [query, setQuery] = useState("");
   const [page, setPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
+  const [imageUrl, setImageUrl] = useState(null);
+  const [isOpen, setIsOpen] = useState(false);
+  const [error, setError] = useState(false);
   const [totalImages, setTotalImages] = useState(0);
-  const [imageUrl, setImageUrl] = useState(0);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [error, setError] = useState(null);
 
   useEffect(() => {
     if (query === "") return;
 
     async function asyncWrapper() {
-      setError(null);
-      setIsLoading(true);
       try {
-        // setIsLoading(true);
-
-        const result = await getArticles(query, page);
-        setImages((prevState) => [...prevState, ...result]);
-        setTotalImages(result.total_results);
+        setError(false);
+        setIsLoading(true);
+        const data = await getImages(query, page);
+        setImages((prevState) => [...prevState, ...data.results]);
+        setTotalImages(data.total_results);
       } catch (error) {
         toast.error(error.message);
       } finally {
@@ -42,44 +41,40 @@ export default function App() {
   }, [query, page]);
 
   const getQuery = (query) => {
-    // console.log(query);
     setQuery(query);
     setImages([]);
     setPage(1);
     setTotalImages(0);
   };
 
-  const onHandleLoadMore = () => {
+  const loadMoreImg = () => {
     setPage(page + 1);
   };
 
   // ======  Modal ============
-  const handlImgClick = (image) => {
-    setImageUrl(image);
-    setIsModalOpen(true);
-  };
 
-  const closeModal = () => {
-    setIsModalOpen(false);
-  };
+  function openModal(alt, url) {
+    setIsOpen(true);
+    setImageUrl({ alt, url });
+  }
+  function closeModal() {
+    setIsOpen(false);
+    setImageUrl({ alt: "", url: "" });
+  }
 
   return (
     <div>
       <SearchBar onSubmit={getQuery} />
       {images.length > 0 && (
-        <ImageGallery images={images} onImgClick={handlImgClick} />
+        <ImageGallery images={images} openModal={openModal} />
       )}
       {images.length < totalImages && !isLoading && (
-        <LoadMoreBtn onClick={onHandleLoadMore} />
+        <LoadMoreBtn onClick={loadMoreImg} />
       )}
-      {isModalOpen && imageUrl && (
-        <ImageModal
-          isOpen={isModalOpen}
-          imageUrl={imageUrl}
-          onClose={closeModal}
-        />
+      {isOpen && imageUrl && (
+        <ImageModal isOpen={isOpen} imageUrl={imageUrl} onClose={closeModal} />
       )}
-      {isLoading && <Loader />}
+      {isLoading && <Loader isLoading={isLoading} />}
       {error && <ErrorMessag message={error} />}
       <Toaster />
     </div>
